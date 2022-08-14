@@ -1,10 +1,11 @@
 #![feature(drain_filter)]
 
 mod api;
-mod instance;
+mod guard;
 mod middleware;
 mod server;
 mod service;
+mod utils;
 
 use crate::api::node::{get_infos, get_node_info, push_node_info};
 use crate::api::player::{get_player, get_players, push_player, push_players};

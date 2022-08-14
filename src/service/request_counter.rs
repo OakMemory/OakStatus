@@ -3,7 +3,7 @@ use std::{thread, time::Duration};
 use once_cell::sync::OnceCell;
 use rocket::tokio::sync::Mutex;
 
-use crate::instance::OakSingleton;
+use crate::utils::instance::OakSingleton;
 
 #[derive(Debug, Default)]
 pub struct RequestCounterService {
@@ -27,8 +27,7 @@ impl OakSingleton for RequestCounterService {
             thread::spawn(|| async {
                 loop {
                     thread::sleep(Duration::from_secs(1));
-                    let x = RequestCounterService::get_instance().lock();
-                    x.await.clean();
+                    RequestCounterService::get_instance().lock().await.clean();
                 }
             });
 

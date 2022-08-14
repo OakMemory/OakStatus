@@ -2,7 +2,7 @@ use once_cell::sync::OnceCell;
 use rocket::tokio::sync::Mutex;
 use serde::{Deserialize, Serialize};
 
-use crate::instance::OakSingleton;
+use crate::utils::instance::OakSingleton;
 
 pub type Worlds = Vec<WorldInfo>;
 

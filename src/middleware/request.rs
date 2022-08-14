@@ -3,7 +3,7 @@ use rocket::{
     Data, Request,
 };
 
-use crate::{instance::OakSingleton, service::request_counter::RequestCounterService};
+use crate::{service::request_counter::RequestCounterService, utils::instance::OakSingleton};
 
 pub struct RequestCounter;
 #[rocket::async_trait]

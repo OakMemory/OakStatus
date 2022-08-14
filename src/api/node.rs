@@ -1,18 +1,30 @@
 use rocket::{http::Status, serde::json::Json};
 
-use crate::server::node::{self, NodeInfos, NodeInfo};
-
+use crate::{
+    guard::request_count,
+    server::node::{NodeInfo, NodeInfos, NodeInfosTrait},
+    utils::instance::OakSingleton,
+};
 #[get("/", format = "json")]
-pub async fn get_infos() -> Option<Json<NodeInfos>> {
-    let x = node::get_node_stats().await.clone();
+pub async fn get_infos(request_count: request_count::RequestCountGuard) -> Option<Json<NodeInfos>> {
+    let x = NodeInfos::get_instance()
+        .lock()
+        .await
+        .get_node_stats()
+        .clone();
     Some(Json(x))
 }
 
 #[get("/<node_name>", format = "json")]
-pub async fn get_node_info(node_name: String) -> Option<Json<NodeInfo>> {
-    let x = node::get_node_stats()
+pub async fn get_node_info(
+    node_name: String,
+    request_count: request_count::RequestCountGuard,
+) -> Option<Json<NodeInfo>> {
+    let x = NodeInfos::get_instance()
+        .lock()
         .await
-        .drain_filter(|v| v.node_name == node_name)
+        .get_node_stats()
+        .drain_filter(|v| v.name == node_name)
         .collect::<NodeInfos>();
 
     let x = x.first();
@@ -24,11 +36,18 @@ pub async fn get_node_info(node_name: String) -> Option<Json<NodeInfo>> {
 }
 
 #[post("/<node_name>", format = "json", data = "<node_info>")]
-pub async fn push_node_info(node_name: String, node_info: Json<NodeInfo>) -> Status {
-    if node_name != node_info.node_name {
+pub async fn push_node_info(
+    node_name: String,
+    node_info: Json<NodeInfo>,
+    request_count: request_count::RequestCountGuard,
+) -> Status {
+    if node_name != node_info.name {
         Status::BadRequest
     } else {
-        node::set_node_info(node_info.0).await;
+        NodeInfos::get_instance()
+            .lock()
+            .await
+            .set_node_info(node_info.0);
         Status::Accepted
     }
 }
