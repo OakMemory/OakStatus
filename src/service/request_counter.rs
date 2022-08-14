@@ -1,8 +1,9 @@
-use std::{sync::Mutex, thread, time::Duration};
+use std::{thread, time::Duration};
 
 use once_cell::sync::OnceCell;
+use rocket::tokio::sync::Mutex;
 
-use super::OakService;
+use crate::instance::OakSingleton;
 
 #[derive(Debug, Default)]
 pub struct RequestCounterService {
@@ -19,14 +20,16 @@ impl RequestCounterService {
     }
 }
 
-impl OakService for RequestCounterService {
+impl OakSingleton for RequestCounterService {
     fn get_instance() -> &'static Mutex<RequestCounterService> {
         static INSTANCE: OnceCell<Mutex<RequestCounterService>> = OnceCell::new();
         INSTANCE.get_or_init(|| {
-            thread::spawn(|| loop {
-                thread::sleep(Duration::from_secs(1));
-                let x = RequestCounterService::get_instance().lock();
-                x.unwrap().clean();
+            thread::spawn(|| async {
+                loop {
+                    thread::sleep(Duration::from_secs(1));
+                    let x = RequestCounterService::get_instance().lock();
+                    x.await.clean();
+                }
             });
 
             Mutex::new(RequestCounterService::default())

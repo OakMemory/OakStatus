@@ -3,9 +3,9 @@ use rocket::{
     Data, Request,
 };
 
-use crate::service::{request_counter_service::RequestCounterService, OakService};
+use crate::{instance::OakSingleton, service::request_counter::RequestCounterService};
 
-struct RequestCounter;
+pub struct RequestCounter;
 #[rocket::async_trait]
 impl Fairing for RequestCounter {
     fn info(&self) -> Info {
@@ -18,7 +18,7 @@ impl Fairing for RequestCounter {
     async fn on_request(&self, _request: &mut Request<'_>, _: &mut Data<'_>) {
         RequestCounterService::get_instance()
             .lock()
-            .unwrap()
+            .await
             .increase();
     }
 }
