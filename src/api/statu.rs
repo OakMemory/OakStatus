@@ -6,18 +6,18 @@ use crate::{
     utils::instance::OakSingleton,
 };
 
-#[get("/<node_name>")]
+#[get("/<node_name>", format = "json")]
 pub async fn get_statu(
     node_name: String,
     request_count: request_count::RequestCountGuard,
 ) -> Option<Json<StatuInfo>> {
-    match Statu::get_instance().lock().await.get_statu(node_name) {
+    match Statu::get_instance().read().await.get_statu(node_name) {
         Some(o) => Some(Json(o)),
         None => None,
     }
 }
 
-#[get("/")]
+#[get("/", format = "json")]
 pub async fn get_status(request_count: request_count::RequestCountGuard) -> Json<Statu> {
-    Json(Statu::get_instance().lock().await.clone())
+    Json(Statu::get_instance().read().await.clone())
 }

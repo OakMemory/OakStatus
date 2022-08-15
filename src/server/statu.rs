@@ -1,7 +1,7 @@
 use std::time::SystemTime;
 
 use once_cell::sync::OnceCell;
-use rocket::tokio::sync::Mutex;
+use rocket::tokio::sync::RwLock;
 use serde::{Deserialize, Serialize};
 
 use crate::utils::instance::OakSingleton;
@@ -68,8 +68,8 @@ impl StatusTrait for Statu {
 }
 
 impl OakSingleton for Statu {
-    fn get_instance() -> &'static Mutex<Statu> {
-        static INSTANCE: OnceCell<Mutex<Statu>> = OnceCell::new();
-        INSTANCE.get_or_init(|| Mutex::new(Statu::default()))
+    fn get_instance() -> &'static RwLock<Statu> {
+        static INSTANCE: OnceCell<RwLock<Statu>> = OnceCell::new();
+        INSTANCE.get_or_init(|| RwLock::new(Statu::default()))
     }
 }

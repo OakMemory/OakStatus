@@ -1,3 +1,6 @@
+use once_cell::sync::OnceCell;
+use rocket::tokio::sync::RwLock;
+
 use crate::utils::instance::OakSingleton;
 
 pub type TokenBucket = Vec<String>;
@@ -29,7 +32,8 @@ impl TokenBucketTrait for TokenBucket {
 }
 
 impl OakSingleton for TokenBucket {
-    fn get_instance() -> &'static rocket::tokio::sync::Mutex<Self> {
-        todo!()
+    fn get_instance() -> &'static rocket::tokio::sync::RwLock<Self> {
+        static INSTANCE: OnceCell<RwLock<TokenBucket>> = OnceCell::new();
+        INSTANCE.get_or_init(|| RwLock::new(TokenBucket::default()))
     }
 }

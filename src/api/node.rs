@@ -8,7 +8,7 @@ use crate::{
 #[get("/", format = "json")]
 pub async fn get_infos(request_count: request_count::RequestCountGuard) -> Option<Json<NodeInfos>> {
     let x = NodeInfos::get_instance()
-        .lock()
+        .read()
         .await
         .get_node_stats()
         .clone();
@@ -21,7 +21,7 @@ pub async fn get_node_info(
     request_count: request_count::RequestCountGuard,
 ) -> Option<Json<NodeInfo>> {
     let x = NodeInfos::get_instance()
-        .lock()
+        .read()
         .await
         .get_node_stats()
         .drain_filter(|v| v.name == node_name)
@@ -45,7 +45,7 @@ pub async fn push_node_info(
         Status::BadRequest
     } else {
         NodeInfos::get_instance()
-            .lock()
+            .write()
             .await
             .set_node_info(node_info.0);
         Status::Accepted

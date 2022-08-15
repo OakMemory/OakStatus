@@ -35,7 +35,7 @@ impl<'r> FromRequest<'r> for TokenVertify {
             .last()
             .unwrap();
 
-        match TokenBucket::get_instance().lock().await.check(token) {
+        match TokenBucket::get_instance().read().await.check(token) {
             true => Outcome::Success(TokenVertify),
             false => Outcome::Failure((Status::NotAcceptable, TokenVertifyError::NoSuchToken)),
         }

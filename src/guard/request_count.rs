@@ -13,7 +13,7 @@ pub struct RequestCountGuard;
 pub enum RequestCountError {
     OutOfRequest,
 }
-#[allow(unused_variables)]
+
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for RequestCountGuard {
     type Error = RequestCountError;

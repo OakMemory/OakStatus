@@ -1,5 +1,5 @@
 use once_cell::sync::OnceCell;
-use rocket::tokio::sync::Mutex;
+use rocket::tokio::sync::RwLock;
 use serde::{Deserialize, Serialize};
 
 use crate::utils::instance::OakSingleton;
@@ -51,8 +51,8 @@ impl WorldsTrait for Worlds {
 }
 
 impl OakSingleton for Worlds {
-    fn get_instance() -> &'static Mutex<Worlds> {
-        static INSTANCE: OnceCell<Mutex<Worlds>> = OnceCell::new();
-        INSTANCE.get_or_init(|| Mutex::new(Worlds::default()))
+    fn get_instance() -> &'static RwLock<Worlds> {
+        static INSTANCE: OnceCell<RwLock<Worlds>> = OnceCell::new();
+        INSTANCE.get_or_init(|| RwLock::new(Worlds::default()))
     }
 }

@@ -17,7 +17,7 @@ impl Fairing for RequestCounter {
 
     async fn on_request(&self, _request: &mut Request<'_>, _: &mut Data<'_>) {
         RequestCounterService::get_instance()
-            .lock()
+            .write()
             .await
             .increase();
     }

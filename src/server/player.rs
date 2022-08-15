@@ -1,5 +1,5 @@
 use once_cell::sync::OnceCell;
-use rocket::tokio::sync::Mutex;
+use rocket::tokio::sync::RwLock;
 
 use serde::{Deserialize, Serialize};
 
@@ -51,8 +51,8 @@ impl PlayersTrait for Players {
 }
 
 impl OakSingleton for Players {
-    fn get_instance() -> &'static Mutex<Players> {
-        static INSTANCE: OnceCell<Mutex<Players>> = OnceCell::new();
-        INSTANCE.get_or_init(|| Mutex::new(Players::default()))
+    fn get_instance() -> &'static RwLock<Players> {
+        static INSTANCE: OnceCell<RwLock<Players>> = OnceCell::new();
+        INSTANCE.get_or_init(|| RwLock::new(Players::default()))
     }
 }

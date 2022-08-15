@@ -1,6 +1,7 @@
 #![feature(drain_filter)]
 
 mod api;
+mod config;
 mod guard;
 mod middleware;
 mod server;
@@ -13,13 +14,14 @@ use crate::api::statu::{get_statu, get_status};
 use crate::api::world::{get_world_info, get_worlds, push_world_info, push_worlds};
 
 use middleware::request::RequestCounter;
+use utils::instance::OakSingleton;
 
 #[macro_use]
 extern crate rocket;
 
 #[launch]
-fn rocket() -> _ {
-    rocket::build()
+async fn rocket() -> _ {
+    rocket::custom(config::OakConfig::get_instance().read().await.clone())
         .attach(RequestCounter)
         .mount(
             "/api/server",

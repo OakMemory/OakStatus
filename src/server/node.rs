@@ -3,7 +3,7 @@ use std::collections::VecDeque;
 use once_cell::sync::OnceCell;
 use rocket::{
     serde::{Deserialize, Serialize},
-    tokio::sync::Mutex,
+    tokio::sync::RwLock,
 };
 
 use crate::utils::instance::OakSingleton;
@@ -55,8 +55,8 @@ impl NodeInfosTrait for NodeInfos {
 }
 
 impl OakSingleton for NodeInfos {
-    fn get_instance() -> &'static Mutex<NodeInfos> {
-        static INSTANCE: OnceCell<Mutex<NodeInfos>> = OnceCell::new();
-        INSTANCE.get_or_init(|| Mutex::new(NodeInfos::default()))
+    fn get_instance() -> &'static RwLock<NodeInfos> {
+        static INSTANCE: OnceCell<RwLock<NodeInfos>> = OnceCell::new();
+        INSTANCE.get_or_init(|| RwLock::new(NodeInfos::default()))
     }
 }

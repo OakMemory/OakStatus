@@ -1,7 +1,7 @@
 use std::{thread, time::Duration};
 
 use once_cell::sync::OnceCell;
-use rocket::tokio::sync::Mutex;
+use rocket::tokio::sync::RwLock;
 
 use crate::utils::instance::OakSingleton;
 
@@ -21,17 +21,17 @@ impl RequestCounterService {
 }
 
 impl OakSingleton for RequestCounterService {
-    fn get_instance() -> &'static Mutex<RequestCounterService> {
-        static INSTANCE: OnceCell<Mutex<RequestCounterService>> = OnceCell::new();
+    fn get_instance() -> &'static RwLock<RequestCounterService> {
+        static INSTANCE: OnceCell<RwLock<RequestCounterService>> = OnceCell::new();
         INSTANCE.get_or_init(|| {
             thread::spawn(|| async {
                 loop {
                     thread::sleep(Duration::from_secs(1));
-                    RequestCounterService::get_instance().lock().await.clean();
+                    RequestCounterService::get_instance().write().await.clean();
                 }
             });
 
-            Mutex::new(RequestCounterService::default())
+            RwLock::new(RequestCounterService::default())
         })
     }
 }
