@@ -7,7 +7,7 @@ use crate::utils::instance::OakSingleton;
 
 #[derive(Debug, Default)]
 pub struct RequestCounterService {
-    pub count: i128,
+    pub count: usize,
 }
 
 impl RequestCounterService {
@@ -17,6 +17,10 @@ impl RequestCounterService {
 
     pub fn clean(&mut self) {
         self.count = 0;
+    }
+
+    pub fn get(&self) -> usize {
+        self.count
     }
 }
 

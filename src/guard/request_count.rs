@@ -6,6 +6,11 @@ use rocket::{
     Request,
 };
 
+use crate::{
+    config::OakConfig, service::request_counter::RequestCounterService,
+    utils::instance::OakSingleton,
+};
+
 #[derive(Default)]
 pub struct RequestCountGuard;
 
@@ -19,6 +24,18 @@ impl<'r> FromRequest<'r> for RequestCountGuard {
     type Error = RequestCountError;
 
     async fn from_request(req: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
-        Outcome::Failure((Status::TooManyRequests, RequestCountError::OutOfRequest))
+        let request_limit: usize = OakConfig::get_instance()
+            .read()
+            .await
+            .extract_inner("request_limit")
+            .unwrap();
+
+        let x = RequestCounterService::get_instance().read().await.get();
+
+        if request_limit > RequestCounterService::get_instance().read().await.get() {
+            Outcome::Success(Self)
+        } else {
+            Outcome::Failure((Status::TooManyRequests, RequestCountError::OutOfRequest))
+        }
     }
 }

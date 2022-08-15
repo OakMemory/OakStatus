@@ -8,10 +8,10 @@ pub type Worlds = Vec<WorldInfo>;
 
 #[derive(Debug, Deserialize, Serialize, Default, Clone)]
 pub struct WorldInfo {
-    player_count: i8,
-    world_uuid: String,
-    world_size: i32,
-    world_name: String,
+    pub player_count: usize,
+    pub world_uuid: String,
+    pub world_size: usize,
+    pub world_name: String,
 }
 
 pub trait WorldsTrait {
