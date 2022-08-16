@@ -24,7 +24,7 @@ async fn rocket() -> _ {
     rocket::custom(config::OakConfig::get_instance().read().await.clone())
         .attach(RequestCounter)
         .mount(
-            "/api/server",
+            "/api/node",
             routes![get_infos, push_node_info, get_node_info],
         )
         .mount("/api/server/status", routes![get_statu, get_status])
