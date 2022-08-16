@@ -27,7 +27,7 @@ async fn rocket() -> _ {
             "/api/node",
             routes![get_infos, push_node_info, get_node_info],
         )
-        .mount("/api/server/status", routes![get_statu, get_status])
+        .mount("/api/statu", routes![get_statu, get_status])
         .mount(
             "/api/player",
             routes![get_player, get_players, push_player, push_players],
