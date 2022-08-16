@@ -10,7 +10,7 @@ pub type Players = Vec<PlayerInfo>;
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct PlayerInfo {
     name: String,
-    life: String,
+    life: f32,
     world: String,
     server: String,
     is_online: bool,
