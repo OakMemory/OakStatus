@@ -43,7 +43,7 @@ impl PlayersTrait for Players {
     fn get_player(&self, player_name: String) -> Option<PlayerInfo> {
         for ele in self {
             if ele.name == player_name {
-                Some(ele.clone());
+                return Some(ele.clone());
             }
         }
         None
