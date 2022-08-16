@@ -68,6 +68,7 @@ mod test {
         let response = client
             .post(uri!("/api/world"))
             .header(ContentType::JSON)
+            .header(Header::new("oak-key", r"J%(vae,q;8}WOZqG!a\Q"))
             .body(post_json)
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
