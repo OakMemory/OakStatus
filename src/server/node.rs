@@ -6,7 +6,7 @@ use rocket::{
     tokio::sync::RwLock,
 };
 
-use crate::utils::instance::OakSingleton;
+use crate::utils::{instance::OakSingleton, wrapped_f32::WrappedF32};
 
 pub type NodeInfos = Vec<NodeInfo>;
 
@@ -14,8 +14,8 @@ pub type NodeInfos = Vec<NodeInfo>;
 #[serde(crate = "rocket::serde")]
 pub struct NodeInfo {
     pub name: String,
-    pub usage_cpu: VecDeque<f32>,
-    pub usage_memory: VecDeque<f32>,
+    pub usage_cpu: VecDeque<WrappedF32>,
+    pub usage_memory: VecDeque<WrappedF32>,
 }
 
 pub trait NodeInfosTrait {
