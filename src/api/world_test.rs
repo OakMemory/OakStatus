@@ -33,14 +33,14 @@ mod test {
             ..WorldInfo::default()
         })
         .unwrap();
-        //////////////Single World////////////////
+        ////////////// Push ////////////////
         let response = client
             .post(uri!("/api/world/uuid"))
             .header(ContentType::JSON)
             .body(post_json)
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
-
+        ////////////// Get ////////////////
         let response = client
             .get(uri!("/api/world/uuid"))
             .header(ContentType::JSON)
@@ -49,9 +49,9 @@ mod test {
     }
 
     #[test]
-    fn pus_get_multi_world() {
+    fn push_get_multi_world() {
         let client = Client::tracked(rocket()).expect("valid rocket instance");
-        //////////////Multi World////////////////
+
         let post_json = serde_json::to_string(&vec![
             WorldInfo {
                 world_uuid: "uuid".to_string(),
@@ -63,13 +63,14 @@ mod test {
             },
         ])
         .unwrap();
+        ////////////// Push ////////////////
         let response = client
             .post(uri!("/api/world"))
             .header(ContentType::JSON)
             .body(post_json)
             .dispatch();
         assert_eq!(response.status(), Status::Ok);
-
+        ////////////// Get ////////////////
         let response = client
             .get(uri!("/api/world"))
             .header(ContentType::JSON)
