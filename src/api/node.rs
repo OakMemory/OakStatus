@@ -1,7 +1,7 @@
 use rocket::{http::Status, serde::json::Json};
 
 use crate::{
-    guard::request_count,
+    guard::{request_count, secret_vertify},
     server::node::{NodeInfo, NodeInfos, NodeInfosTrait},
     utils::instance::OakSingleton,
 };
@@ -40,6 +40,7 @@ pub async fn push_node_info(
     node_name: String,
     node_info: Json<NodeInfo>,
     request_count: request_count::RequestCountGuard,
+    token_vertify: secret_vertify::SecretVertifyGuard,
 ) -> Status {
     if node_name != node_info.name {
         Status::BadRequest

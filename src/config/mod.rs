@@ -14,15 +14,15 @@ pub type OakConfig = Figment;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OakConfigContent {
-    request_limit: usize,
-    token_bucket: Vec<String>,
+    pub request_limit: usize,
+    pub secret_bucket: Vec<String>,
 }
 
 impl Default for OakConfigContent {
     fn default() -> Self {
         Self {
             request_limit: 1000,
-            token_bucket: vec![
+            secret_bucket: vec![
                 r"J%(vae,q;8}WOZqG!a\Q".to_string(),
                 r"hG|+@W00H:'30m9zW.j)".to_string(),
                 r"*eKbnBl^RH.Sa997,Is".to_string(),

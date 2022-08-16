@@ -18,6 +18,6 @@ pub async fn get_statu(
 }
 
 #[get("/", format = "json")]
-pub async fn get_status(request_count: request_count::RequestCountGuard) -> Json<Statu> {
+pub async fn get_status(request_count: request_count::RequestCountGuard,) -> Json<Statu> {
     Json(Statu::get_instance().read().await.clone())
 }

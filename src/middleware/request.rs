@@ -10,8 +10,8 @@ pub struct RequestCounter;
 impl Fairing for RequestCounter {
     fn info(&self) -> Info {
         Info {
-            name: "Request counter",
-            kind: Kind::Request,
+            name: "Request Counter",
+            kind: Kind::Request | Kind::Singleton,
         }
     }
 

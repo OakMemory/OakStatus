@@ -1,5 +1,5 @@
 #![feature(drain_filter)]
-#![feature(exclusive_range_pattern)]
+
 mod api;
 mod config;
 mod guard;

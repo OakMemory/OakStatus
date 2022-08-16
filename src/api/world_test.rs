@@ -14,7 +14,7 @@ mod test {
     use crate::server::world::WorldInfo;
 
     use super::rocket;
-    use rocket::http::{ContentType, Status};
+    use rocket::http::{ContentType, Header, Status};
     use rocket::local::blocking::Client;
 
     #[test]
@@ -37,6 +37,7 @@ mod test {
         let response = client
             .post(uri!("/api/world/uuid"))
             .header(ContentType::JSON)
+            .header(Header::new("oak-key", r"J%(vae,q;8}WOZqG!a\Q"))
             .body(post_json)
             .dispatch();
         assert_eq!(response.status(), Status::Ok);

@@ -1,7 +1,7 @@
 use rocket::serde::json::Json;
 
 use crate::{
-    guard::request_count,
+    guard::{request_count, secret_vertify},
     server::player::{PlayerInfo, Players, PlayersTrait},
     utils::instance::OakSingleton,
 };
@@ -23,7 +23,11 @@ pub async fn get_player(
 }
 
 #[post("/", format = "json", data = "<players>")]
-pub async fn push_players(players: Json<Players>, request_count: request_count::RequestCountGuard) {
+pub async fn push_players(
+    players: Json<Players>,
+    request_count: request_count::RequestCountGuard,
+    token_vertify: secret_vertify::SecretVertifyGuard,
+) {
     Players::get_instance().write().await.put_players(players.0);
 }
 
@@ -32,6 +36,7 @@ pub async fn push_player(
     player_name: String,
     player_info: Json<PlayerInfo>,
     request_count: request_count::RequestCountGuard,
+    token_vertify: secret_vertify::SecretVertifyGuard,
 ) {
     Players::get_instance()
         .write()

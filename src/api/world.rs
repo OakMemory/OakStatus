@@ -1,7 +1,7 @@
 use rocket::serde::json::Json;
 
 use crate::{
-    guard::request_count,
+    guard::{request_count, secret_vertify},
     server::world::{WorldInfo, Worlds, WorldsTrait},
     utils::instance::OakSingleton,
 };
@@ -26,6 +26,7 @@ pub async fn get_world_info(
 pub async fn push_worlds(
     world_infos: Json<Vec<WorldInfo>>,
     request_count: request_count::RequestCountGuard,
+    secret_vertify: secret_vertify::SecretVertifyGuard,
 ) {
     for ele in world_infos.iter() {
         Worlds::get_instance().write().await.put_world(ele.clone());
@@ -37,6 +38,7 @@ pub async fn push_world_info(
     uuid: String,
     world_info: Json<WorldInfo>,
     request_count: request_count::RequestCountGuard,
+    secret_vertify: secret_vertify::SecretVertifyGuard,
 ) {
     Worlds::get_instance().write().await.put_world(world_info.0);
 }
