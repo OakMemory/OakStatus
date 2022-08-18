@@ -32,7 +32,6 @@ async fn rocket() -> _ {
                 push_memory_load,
             ],
         )
-        // .mount("/api/statu", routes![get_statu, get_status])
         .mount(
             "/api/player",
             routes![get_player, get_players, push_player, push_players],

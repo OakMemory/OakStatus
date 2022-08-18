@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, time::SystemTime};
 
 use once_cell::sync::OnceCell;
 use rocket::{
@@ -10,11 +10,22 @@ use crate::utils::instance::OakSingleton;
 
 pub type NodeInfos = HashMap<String, NodeInfo>;
 
-#[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(crate = "rocket::serde")]
 pub struct NodeInfo {
+    pub last_push: SystemTime,
     pub cpu_load: Vec<f32>,
     pub memory_load: Vec<f32>,
+}
+
+impl Default for NodeInfo {
+    fn default() -> Self {
+        Self {
+            last_push: SystemTime::now(),
+            cpu_load: Default::default(),
+            memory_load: Default::default(),
+        }
+    }
 }
 
 pub trait NodeInfosTrait {
