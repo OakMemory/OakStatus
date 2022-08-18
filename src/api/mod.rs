@@ -6,5 +6,6 @@ pub mod player;
 pub mod statu;
 #[allow(unused_variables)]
 pub mod world;
+
 #[allow(dead_code)]
 mod world_test;

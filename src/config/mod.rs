@@ -16,6 +16,7 @@ pub type OakConfig = Figment;
 pub struct OakConfigContent {
     pub request_limit: usize,
     pub secret_bucket: Vec<String>,
+    pub storage_time: usize,
 }
 
 impl Default for OakConfigContent {
@@ -27,6 +28,7 @@ impl Default for OakConfigContent {
                 r"hG|+@W00H:'30m9zW.j)".to_string(),
                 r"*eKbnBl^RH.Sa997,Is".to_string(),
             ],
+            storage_time: 6 * 60 * 60,
         }
     }
 }

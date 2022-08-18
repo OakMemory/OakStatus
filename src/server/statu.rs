@@ -1,4 +1,4 @@
-use std::time::SystemTime;
+use std::{collections::HashMap, time::SystemTime};
 
 use once_cell::sync::OnceCell;
 use rocket::tokio::sync::RwLock;
@@ -6,27 +6,27 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::instance::OakSingleton;
 
-pub type Statu = Vec<StatuInfo>;
+pub type Statu = HashMap<String, StatuInfo>;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StatuInfo {
-    node_name: String,
     last_push: SystemTime,
-    is_down: bool,
+    is_online: bool,
 }
 
 pub trait StatusTrait {
     fn get_statu(&self, node_name: String) -> Option<StatuInfo>;
     fn get_status(&self) -> Statu;
-    fn set_down(&mut self, node_name: String);
-    fn update(&mut self, node_name: String);
+    fn set_status(&mut self, node_name: String, is_online: bool);
+    fn update_push(&mut self, node_name: String);
+    fn add_node(&mut self, node_name: String);
 }
 
 impl StatusTrait for Statu {
     fn get_statu(&self, node_name: String) -> Option<StatuInfo> {
-        for ele in self {
-            if ele.node_name == node_name {
-                return Some(ele.clone());
+        for (name, info) in self {
+            if *name == node_name {
+                return Some(info.clone());
             }
         }
         None
@@ -36,34 +36,40 @@ impl StatusTrait for Statu {
         self.clone()
     }
 
-    fn set_down(&mut self, node_name: String) {
-        for (index, ele) in self.iter().enumerate() {
-            if ele.node_name == node_name {
-                let ele = StatuInfo {
-                    is_down: true,
-                    ..ele.clone()
-                };
-
-                self.push(ele);
-                self.swap_remove(index);
-                break;
-            }
-        }
+    fn set_status(&mut self, node_name: String, is_online: bool) {
+        match self.get(&node_name) {
+            Some(o) => self.insert(
+                node_name,
+                StatuInfo {
+                    is_online,
+                    ..o.clone()
+                },
+            ),
+            None => return,
+        };
     }
 
-    fn update(&mut self, node_name: String) {
-        for (index, ele) in self.iter().enumerate() {
-            if ele.node_name == node_name {
-                let ele = StatuInfo {
+    fn add_node(&mut self, node_name: String) {
+        self.insert(
+            node_name,
+            StatuInfo {
+                last_push: SystemTime::now(),
+                is_online: true,
+            },
+        );
+    }
+
+    fn update_push(&mut self, node_name: String) {
+        match self.get(&node_name) {
+            Some(o) => self.insert(
+                node_name,
+                StatuInfo {
                     last_push: SystemTime::now(),
-                    is_down: false,
-                    ..ele.clone()
-                };
-                self.push(ele);
-                self.swap_remove(index);
-                break;
-            }
-        }
+                    ..o.clone()
+                },
+            ),
+            None => return,
+        };
     }
 }
 

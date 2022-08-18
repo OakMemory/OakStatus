@@ -28,7 +28,12 @@ pub async fn push_players(
     request_count: request_count::RequestCountGuard,
     token_vertify: secret_vertify::SecretVertifyGuard,
 ) {
-    Players::get_instance().write().await.put_players(players.0);
+    for (index, ele) in players.0.iter() {
+        Players::get_instance()
+            .write()
+            .await
+            .put_player(index.to_string(), ele.clone());
+    }
 }
 
 #[post("/<player_name>", format = "json", data = "<player_info>")]
@@ -41,5 +46,5 @@ pub async fn push_player(
     Players::get_instance()
         .write()
         .await
-        .put_player(player_info.0);
+        .put_player(player_name, player_info.0);
 }

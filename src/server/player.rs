@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use once_cell::sync::OnceCell;
 use rocket::tokio::sync::RwLock;
 
@@ -5,11 +7,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::utils::instance::OakSingleton;
 
-pub type Players = Vec<PlayerInfo>;
+pub type Players = HashMap<String, PlayerInfo>;
 
 #[derive(Debug, Default, Serialize, Deserialize, Clone)]
 pub struct PlayerInfo {
-    name: String,
     life: f32,
     world: String,
     server: String,
@@ -17,36 +18,17 @@ pub struct PlayerInfo {
 }
 
 pub trait PlayersTrait {
-    fn put_players(&mut self, players: Vec<PlayerInfo>);
-    fn put_player(&mut self, player_info: PlayerInfo);
+    fn put_player(&mut self, player_name: String, player_info: PlayerInfo);
     fn get_player(&self, player_name: String) -> Option<PlayerInfo>;
 }
 
 impl PlayersTrait for Players {
-    fn put_players(&mut self, players: Vec<PlayerInfo>) {
-        for ele in players {
-            self.put_player(ele)
-        }
-    }
-
-    fn put_player(&mut self, player_info: PlayerInfo) {
-        for (index, value) in self.clone().iter().enumerate() {
-            if value.name == player_info.name {
-                self.remove(index);
-                self.push(player_info);
-                return;
-            }
-        }
-        self.push(player_info);
+    fn put_player(&mut self, player_name: String, player_info: PlayerInfo) {
+        self.insert(player_name, player_info);
     }
 
     fn get_player(&self, player_name: String) -> Option<PlayerInfo> {
-        for ele in self {
-            if ele.name == player_name {
-                return Some(ele.clone());
-            }
-        }
-        None
+        self.get(&player_name).cloned()
     }
 }
 
