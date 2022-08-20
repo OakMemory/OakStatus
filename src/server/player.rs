@@ -15,6 +15,7 @@ pub struct PlayerInfo {
     world: String,
     server: String,
     is_online: bool,
+    permission: String,
 }
 
 pub trait PlayersTrait {
